@@ -20,7 +20,10 @@
     "yeoman",
     "package"
   ],
-  "repository": "SBoudrias/inquirer-npm-name",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SBoudrias/inquirer-npm-name.git"
+  },
   "scripts": {
     "test": "make check"
   },
