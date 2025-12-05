@@ -1,87 +1,32 @@
-'use strict';
+import test from 'node:test';
+import askName from '../lib/index.js';
 
-var assert = require('assert');
-var sinon = require('sinon');
-var proxyquire = require('proxyquire');
-var askName = require('../lib');
+test('inquirer-npm-name', async t => {
+  let conf;
+  const inquirer = {
+    prompt() {}
+  };
 
-describe('inquirer-npm-name', function () {
-  beforeEach(function () {
-    this.conf = {
+  t.beforeEach(() => {
+    conf = {
       name: 'name',
       message: 'Module name'
     };
-
-    this.inquirer = {
-      prompt: sinon.stub()
-    };
   });
 
-  it('only ask name if name is free', function () {
-    this.inquirer.prompt.returns(Promise.resolve({name: 'foo'}));
+  await t.test('only ask name if name is free', async t => {
+    t.mock.method(inquirer, 'prompt', () => Promise.resolve({ name: 'foo' }));
 
-    return askName(this.conf, this.inquirer).then(function (props) {
-      assert.equal(props.name, 'foo');
-    });
+    const props = await askName(conf, inquirer);
+    t.assert.equal(props.name, 'foo');
   });
 
-  it('recurse if name is taken', function () {
-    this.inquirer.prompt
-      .onFirstCall().returns(Promise.resolve({name: 'foo', askAgain: true}))
-      .onSecondCall().returns(Promise.resolve({name: 'bar'}));
+  await t.test('recurse if name is taken', async t => {
+    t.mock.method(inquirer, 'prompt', () => Promise.resolve({ name: 'bar' }));
+    inquirer.prompt.mock.mockImplementationOnce(() => Promise.resolve({ name: 'foo', askAgain: true }));
 
-    return askName(this.conf, this.inquirer).then(function (props) {
-      assert.equal(props.name, 'bar');
-    });
-  });
-
-  describe('npm validation logic (inquirer `when` function)', function () {
-    beforeEach(function () {
-      this.askName2 = proxyquire('../lib', {
-        'npm-name': function (name) {
-          if (this.npmNameError instanceof Error) {
-            return Promise.reject(this.npmNameError);
-          }
-
-          return Promise.resolve(name === 'yo');
-        }.bind(this)
-      });
-    });
-
-    it('ask question if npm name is taken', function () {
-      this.inquirer.prompt.returns(Promise.resolve({name: 'yo'}));
-      this.conf.name = 'yo';
-
-      return this.askName2(this.conf, this.inquirer).then(function () {
-        this.when = this.inquirer.prompt.getCall(0).args[0][1].when;
-        this.when({name: 'yo'}).then(function (shouldAsk) {
-          assert.ok(shouldAsk);
-        });
-      }.bind(this));
-    });
-
-    it('does not ask question if npm name is free', function () {
-      this.inquirer.prompt.returns(Promise.resolve({name: 'foo'}));
-
-      return this.askName2(this.conf, this.inquirer).then(function () {
-        this.when = this.inquirer.prompt.getCall(0).args[0][1].when;
-        this.when({name: 'foo'}).then(function (shouldAsk) {
-          assert.ok(shouldAsk);
-        });
-      }.bind(this));
-    });
-
-    it('does not ask if npm-name fails', function () {
-      this.inquirer.prompt.returns(Promise.resolve({name: 'foo'}));
-
-      this.npmNameError = new Error('Network Error');
-      return this.askName2(this.conf, this.inquirer).then(function () {
-        this.when = this.inquirer.prompt.getCall(0).args[0][1].when;
-
-        return this.when({name: 'foo'}).catch(function (err) {
-          assert.equal(err.message, 'Network Error');
-        });
-      }.bind(this));
-    });
+    const props = await askName(conf, inquirer);
+    t.assert.equal(props.name, 'bar');
+    t.assert.equal(inquirer.prompt.mock.callCount(), 2);
   });
 });

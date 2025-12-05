@@ -1,4 +1,8 @@
-# inquirer-npm-name [![NPM version][npm-image]][npm-url] [![Build Status][travis-image]][travis-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Coverage percentage][coveralls-image]][coveralls-url]
+[![NPM version][npm-image]][npm-url]
+[![Build Status][build-image]][build-url]
+[![Dependency Status][deps-image]][deps-url]
+
+# inquirer-npm-name
 
 Helper function using [inquirer](https://github.com/SBoudrias/Inquirer.js) to
 validate a value provided in a prompt does not exist as a npm package.
@@ -76,11 +80,12 @@ module.exports = generators.Base.extend({
 MIT © [Simon Boudrias](http://twitter.com/vaxilart)
 
 [validate-npm-package-name]: https://npmjs.org/package/validate-npm-package-name
-[npm-image]: https://badge.fury.io/js/inquirer-npm-name.svg
+
+[npm-image]: https://img.shields.io/npm/v/inquirer-npm-name
 [npm-url]: https://npmjs.org/package/inquirer-npm-name
-[travis-image]: https://travis-ci.org/SBoudrias/inquirer-npm-name.svg?branch=master
-[travis-url]: https://travis-ci.org/SBoudrias/inquirer-npm-name
-[daviddm-image]: https://david-dm.org/SBoudrias/inquirer-npm-name.svg?theme=shields.io
-[daviddm-url]: https://david-dm.org/SBoudrias/inquirer-npm-name
-[coveralls-image]: https://coveralls.io/repos/SBoudrias/inquirer-npm-name/badge.svg
-[coveralls-url]: https://coveralls.io/r/SBoudrias/inquirer-npm-name
+
+[build-url]: https://github.com/pirxpilot/inquirer-npm-name/actions/workflows/check.yaml
+[build-image]: https://img.shields.io/github/actions/workflow/status/pirxpilot/inquirer-npm-name/check.yaml?branch=main
+
+[deps-image]: https://img.shields.io/librariesio/release/npm/inquirer-npm-name
+[deps-url]: https://libraries.io/npm/inquirer-npm-name
